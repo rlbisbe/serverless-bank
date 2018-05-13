@@ -1,0 +1,45 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: 'AWS::Serverless-2016-10-31'
+Description: 'A simple banking app built on lambdas'
+
+Resources:
+  Bank:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: function.dispatch
+      CodeUri: .
+      Runtime: python3.6
+      Events:
+        CreateAccount:
+          Type: Api
+          Properties:
+            Path: '/account/new'
+            Method: put
+        GetBalance:
+          Type: Api
+          Properties:
+            Path: '/account'
+            Method: get
+        Deposit:
+          Type: Api
+          Properties:
+            Path: '/account/deposit'
+            Method: post
+        Transfer:
+          Type: Api
+          Properties:
+            Path: '/account/transfer'
+            Method: post
+        Withdraw:
+          Type: Api
+          Properties:
+            Path: '/account/withdraw'
+            Method: post
+      Policies:
+        - Version: '2012-10-17'
+          Statement:
+            - Effect: Allow
+              Action:
+                - 'dynamodb:PutItem'
+                - 'dynamodb:GetItem'
+              Resource: 'arn:aws:dynamodb:*:*:*'
